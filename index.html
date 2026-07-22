@@ -36,7 +36,7 @@ canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%}
 <canvas id="c"></canvas>
 <div id="dbg">yükleniyor...</div>
 <script>
-const C=document.getElementById('c'),X=C.getContext('2d');
+const C=document.getElementById('c'),ctx=C.getContext('2d');
 let W,H;
 function r(){W=C.width=window.innerWidth;H=C.height=window.innerHeight}r();
 window.addEventListener('resize',r);
@@ -70,9 +70,9 @@ function loop(t){
 
   // Vites
   if(k.r&&vi!==0){vi=0;va='R';gt=.4;vs(0)}else if(vi===0&&!k.r){vi=1;va='N';gt=.2}
-  else if(k.shift&>>=2&&vi<8&&h>3){vi++;va=['N','N','1','2','3','4','5','6','7'][vi];gt=.4;d*=.65;vs(1);k.shift=0}
+  else if(k.shift&&vi>=2&&vi<8&&h>3){vi++;va=['N','N','1','2','3','4','5','6','7'][vi];gt=.4;d*=.65;vs(1);k.shift=0}
   else if(k.control&&vi>2){vi--;va=['N','N','1','2','3','4','5','6','7'][vi];gt=.35;d=Math.min(7000,d*1.35);vs(0);k.control=0}
-  else if(km<1&&vi>1&&!k.shift&&!k.control&>[<.01){vi=1;va='N'}
+  else if(km<1&&vi>1&&!k.shift&&!k.control&&gearTimer<.01){vi=1;va='N'}
 
   // Devir
   if(vi===1)d+=(700+gz*3500-d)*dl*2.5;
