@@ -6,100 +6,565 @@
 <title>Mercedes-Benz CL63 AMG — Sürüş Simülatörü</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;user-select:none;-webkit-user-select:none}
-canvas{display:block}
-#hud{position:fixed;bottom:0;left:0;right:0;height:230px;pointer-events:none;z-index:10;
-  background:linear-gradient(transparent,rgba(0,0,0,0.6) 30%,rgba(0,0,0,0.92))}
-#hizGosterge{position:absolute;bottom:70px;left:60px;color:#00ff88;font-size:80px;font-weight:700;
-  text-shadow:0 0 25px rgba(0,255,136,0.4),0 0 60px rgba(0,255,136,0.1);
-  font-family:'Courier New',monospace;letter-spacing:2px;line-height:1}
-#hizBirim{font-size:16px;color:#666;margin-left:8px;letter-spacing:3px}
-#devir{position:absolute;bottom:95px;left:60px;color:#ff8800;font-size:14px;font-weight:600;
-  text-shadow:0 0 8px rgba(255,136,0,0.2);font-family:'Courier New',monospace;letter-spacing:2px}
-#devirSayi{font-size:20px;color:#ffaa00}
-#devirBar{position:absolute;bottom:62px;left:60px;width:260px;height:5px;background:#1a1a1a;border-radius:3px;overflow:hidden;border:1px solid #222}
-#devirDolu{height:100%;width:0%;background:linear-gradient(90deg,#00ff88,#88ff00,#ffaa00,#ff4400,#ff0044);border-radius:2px;transition:width 0.04s}
-#devirKirmizi{position:absolute;right:0;top:0;bottom:0;width:15%;background:rgba(255,0,0,0.15);border-radius:0 2px 2px 0}
-#vites{position:absolute;bottom:120px;right:120px;text-align:center}
-#vitesHarfler{color:#fff;font-size:42px;font-weight:700;font-family:'Courier New',monospace;text-shadow:0 0 15px rgba(255,255,255,0.15);line-height:1}
-#vites span{display:block;font-size:12px;color:#666;letter-spacing:2px;margin-top:-4px}
-#hizBilgisi{position:absolute;bottom:72px;right:120px;text-align:right;font-family:'Courier New',monospace}
-#hizBilgisi div{font-size:13px;color:#555;margin:1px 0}
-#hizBilgisi .val{color:#aaa;font-size:16px}
-#direksiyonGosterge{position:absolute;bottom:40px;right:60px;width:90px;height:90px;border-radius:50%;
-  border:2px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,0.15);font-size:28px;z-index:15;pointer-events:none;transition:transform 0.08s}
-#uyari{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:26px;font-weight:700;
-  background:rgba(0,0,0,0.85);padding:35px 55px;border-radius:16px;border:1px solid rgba(0,255,136,0.3);
-  text-align:center;z-index:100;box-shadow:0 0 80px rgba(0,0,0,0.8);pointer-events:none;
-  backdrop-filter:blur(10px)}
-#uyari .logo{font-size:48px;margin-bottom:8px}
-#uyari small{display:block;font-size:13px;color:#666;margin-top:12px;font-weight:400;letter-spacing:1px}
-#bilgi{position:fixed;bottom:240px;left:50%;transform:translateX(-50%);
-  color:rgba(255,255,255,0.1);font-size:12px;z-index:10;font-family:'Courier New',monospace;
-  pointer-events:none;text-align:center;line-height:1.8;letter-spacing:1px;white-space:nowrap}
-#aynaSol{position:fixed;top:20px;left:20px;width:140px;height:80px;border:1px solid rgba(255,255,255,0.12);
-  border-radius:6px;overflow:hidden;z-index:20;pointer-events:none;background:#000;
-  box-shadow:0 0 15px rgba(0,0,0,0.6)}
-#aynaSag{position:fixed;top:20px;right:20px;width:140px;height:80px;border:1px solid rgba(255,255,255,0.12);
-  border-radius:6px;overflow:hidden;z-index:20;pointer-events:none;background:#000;
-  box-shadow:0 0 15px rgba(0,0,0,0.6)}
-#aynaOrta{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:110px;height:55px;
-  border:1px solid rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;z-index:20;
-  pointer-events:none;background:#000;opacity:0.5;box-shadow:0 0 10px rgba(0,0,0,0.5)}
-.aynaEtiket{position:absolute;bottom:2px;left:4px;color:rgba(255,255,255,0.15);font-size:8px;font-family:sans-serif;z-index:21;pointer-events:none}
-#geceEfekti{position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,20,0.3));z-index:5;pointer-events:none}
-#farIsigi{position:fixed;top:0;left:0;right:0;bottom:0;z-index:4;pointer-events:none;opacity:0;
-  background:radial-gradient(ellipse 80% 40% at 50% 70%,rgba(255,255,200,0.06),transparent 70%);
-  transition:opacity 0.3s}
-.sinyal{position:fixed;top:80px;width:30px;height:30px;border-radius:50%;z-index:22;pointer-events:none;
-  opacity:0;transition:opacity 0.1s}
-#sinyalSol{left:170px;background:radial-gradient(#00ff44 0%,transparent 70%);box-shadow:0 0 20px #00ff44}
-#sinyalSag{right:170px;background:radial-gradient(#00ff44 0%,transparent 70%);box-shadow:0 0 20px #00ff44}
+body{overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;user-select:none;-webkit-user-select:none;cursor:default}
+canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%}
+#hud{position:fixed;bottom:0;left:0;right:0;height:200px;pointer-events:none;z-index:10;
+  background:linear-gradient(transparent,rgba(0,0,0,0.5) 25%,rgba(0,0,0,0.9))}
+.hiz{position:absolute;bottom:60px;left:50px;color:#00ff88;font-size:72px;font-weight:700;
+  text-shadow:0 0 20px rgba(0,255,136,0.3);font-family:'Courier New',monospace;letter-spacing:2px;line-height:1}
+.hiz small{font-size:14px;color:#666;margin-left:6px;letter-spacing:3px}
+.devir{position:absolute;bottom:85px;left:50px;color:#ff8800;font-size:13px;font-family:'Courier New',monospace}
+.devir span{font-size:19px;color:#ffaa00}
+.devirBar{position:absolute;bottom:52px;left:50px;width:220px;height:4px;background:#1a1a1a;border-radius:2px;border:1px solid #222;overflow:hidden}
+.devirDolu{height:100%;width:0%;background:linear-gradient(90deg,#00ff88,#88ff00,#ffaa00,#ff4400,#ff0044);border-radius:2px;transition:width .04s}
+.vites{position:absolute;bottom:110px;right:100px;text-align:center}
+.vites .h{color:#fff;font-size:38px;font-weight:700;font-family:'Courier New',monospace;text-shadow:0 0 10px rgba(255,255,255,0.1)}
+.vites span{display:block;font-size:11px;color:#555;letter-spacing:2px;margin-top:-3px}
+.hizBilgi{position:absolute;bottom:62px;right:100px;text-align:right;font-family:'Courier New',monospace;font-size:12px;color:#555;line-height:1.6}
+.hizBilgi .v{color:#999;font-size:15px}
+.dirGost{position:absolute;bottom:30px;right:50px;width:70px;height:70px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,0.1);font-size:24px;transition:transform .08s}
+#bilgi{position:fixed;bottom:208px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.08);
+  font-size:11px;font-family:'Courier New',monospace;pointer-events:none;text-align:center;line-height:1.8;letter-spacing:1px;white-space:nowrap}
+#uyari{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:24px;font-weight:700;
+  background:rgba(0,0,0,0.85);padding:30px 50px;border-radius:14px;border:1px solid rgba(0,255,136,0.25);
+  text-align:center;z-index:100;box-shadow:0 0 60px rgba(0,0,0,0.8);pointer-events:none;
+  backdrop-filter:blur(8px)}
+#uyari .logo{font-size:42px;margin-bottom:6px}
+#uyari small{display:block;font-size:12px;color:#555;margin-top:10px;font-weight:400}
 </style>
 </head>
 <body>
 
-<!-- AYNALAR -->
-<div id="aynaSol"><canvas id="aynaSolCanvas" width="140" height="80"></canvas><span class="aynaEtiket">SOL</span></div>
-<div id="aynaSag"><canvas id="aynaSagCanvas" width="140" height="80"></canvas><span class="aynaEtiket">SAĞ</span></div>
-<div id="aynaOrta"><canvas id="aynaOrtaCanvas" width="110" height="55"></canvas><span class="aynaEtiket">ORTA</span></div>
-
-<!-- SİNYAL IŞIKLARI -->
-<div id="sinyalSol" class="sinyal"></div>
-<div id="sinyalSag" class="sinyal"></div>
-
-<!-- FAR IŞIĞI -->
-<div id="farIsigi"></div>
-<div id="geceEfekti"></div>
-
-<!-- HUD -->
 <div id="hud">
-  <div id="hizGosterge">0<span id="hizBirim">KM/H</span></div>
-  <div id="devir">DEVİR <span id="devirSayi">0</span> rpm</div>
-  <div id="devirBar">
-    <div id="devirDolu"></div>
-    <div id="devirKirmizi"></div>
+  <div class="hiz">0<small>KM/H</small></div>
+  <div class="devir">DEVİR <span id="devirS">0</span> rpm</div>
+  <div class="devirBar"><div class="devirDolu" id="devirD"></div></div>
+  <div class="vites"><div class="h" id="vitesH">N</div><span>VİTES</span></div>
+  <div class="hizBilgi">
+    <div><span class="v" id="hizKm">0</span> km/h</div>
+    <div><span class="v" id="hizMph">0</span> mph</div>
   </div>
-  <div id="vites">
-    <div id="vitesHarfler">N</div>
-    <span>VİTES</span>
-  </div>
-  <div id="hizBilgisi">
-    <div><span class="val" id="hizKm">0</span> km/h</div>
-    <div><span class="val" id="hizMph">0</span> mph</div>
-  </div>
-  <div id="direksiyonGosterge">⟳</div>
+  <div class="dirGost" id="dirG">⟳</div>
 </div>
 
-<div id="bilgi">W GAZ &nbsp;|&nbsp; S FREN &nbsp;|&nbsp; A/D DİREKSİYON &nbsp;|&nbsp; SHIFT VİTES ↑ &nbsp;|&nbsp; CTRL VİTES ↓ &nbsp;|&nbsp; R GERİ &nbsp;|&nbsp; F FAR &nbsp;|&nbsp; Q/E SİNYAL &nbsp;|&nbsp; BOŞLUK EL FRENİ</div>
+<div id="bilgi">W GAZ  |  S FREN  |  A/D DİREKSİYON  |  SHIFT ↑ VİTES  |  CTRL ↓ VİTES  |  R GERİ  |  F FAR  |  BOŞLUK EL FRENİ</div>
 <div id="uyari">
   <div class="logo">🚗</div>
   Mercedes-Benz CL63 AMG<br>
   <small>Sürüşe başlamak için tıkla</small>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-<script src="mercedes.js"></script>
+<canvas id="c"></canvas>
+
+<script>
+// ============== MERCEDES CL63 — CANVAS 2D ==============
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Tuşlar
+const keys = {};
+let fareKilitli = false;
+let mouseX = 0, mouseY = 0;
+let lastTime = 0, delta = 0;
+
+// Araba durumu
+let hiz = 0, devir = 700, kmS = 0;
+let vitesIdx = 1; // 0=R, 1=N, 2-8=1-7
+let vitAdi = 'N';
+let direk = 0, rotY = 0, rotX = 0.3;
+let farAcik = false, farTusB = false;
+let gearTimer = 0;
+
+// Yol
+let yolZ = 0;
+const trafik = [];
+for (let i = 0; i < 15; i++) {
+  trafik.push({
+    z: -(Math.random() * 800 + 20),
+    x: (Math.random() - 0.5) * 10,
+    hiz: 0.5 + Math.random() * 1.5,
+    renk: `hsl(${Math.random() * 360},60%,${30 + Math.random() * 30}%)`
+  });
+}
+
+// Ses
+let sesCtx, sesOsc, sesGain, sesFilt;
+function sesBaslat() {
+  try {
+    sesCtx = new (window.AudioContext || window.webkitAudioContext)();
+    sesOsc = sesCtx.createOscillator();
+    sesGain = sesCtx.createGain();
+    sesFilt = sesCtx.createBiquadFilter();
+    sesOsc.type = 'sawtooth';
+    sesFilt.type = 'lowpass';
+    sesFilt.frequency.value = 120;
+    sesFilt.Q.value = 3;
+    sesGain.gain.value = 0;
+    sesOsc.connect(sesFilt); sesFilt.connect(sesGain); sesGain.connect(sesCtx.destination);
+    sesOsc.start();
+
+    // Sub
+    const o2 = sesCtx.createOscillator();
+    const g2 = sesCtx.createGain();
+    o2.type = 'sine'; g2.gain.value = 0;
+    o2.connect(g2); g2.connect(sesCtx.destination); o2.start();
+
+    // Gürültü
+    const buf = sesCtx.createBuffer(1, sesCtx.sampleRate, sesCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/d.length, 3);
+    const n = sesCtx.createBufferSource();
+    n.buffer = buf; n.loop = true;
+    const gn = sesCtx.createGain(); gn.gain.value = 0;
+    n.connect(gn); gn.connect(sesCtx.destination); n.start();
+
+    // Vites sesi
+    const go = sesCtx.createOscillator();
+    const gg = sesCtx.createGain();
+    go.type = 'sine'; gg.gain.value = 0;
+    go.connect(gg); gg.connect(sesCtx.destination); go.start();
+
+    window.__ses = { osc: sesOsc, gain: sesGain, filt: sesFilt, o2, g2, gn, go, gg, noise: gn };
+    sesCtx.resume();
+  } catch(e) {}
+}
+
+function sesGuncel(d, gaz) {
+  const s = window.__ses;
+  if (!s) return;
+  try {
+    const t = sesCtx.currentTime;
+    const base = 28 + (d/1000) * 28;
+    s.osc.frequency.setTargetAtTime(base, t, 0.04);
+    s.filt.frequency.setTargetAtTime(90 + (d/1000)*90 + gaz*60, t, 0.04);
+    s.gain.gain.setTargetAtTime(Math.min(0.08, gaz*0.035 + (d/1000)*0.006), t, 0.04);
+    s.o2.frequency.setTargetAtTime(base*0.5, t, 0.04);
+    s.g2.gain.setTargetAtTime(Math.min(0.10, gaz*0.05+(d/1000)*0.004), t, 0.04);
+    s.gn.gain.setTargetAtTime(Math.min(0.015, gaz*0.006+(d/1000)*0.001), t, 0.04);
+  } catch(e) {}
+}
+
+function vitesSesi(yuk) {
+  const s = window.__ses;
+  if (!s || !sesCtx) return;
+  try {
+    const t = sesCtx.currentTime;
+    s.go.frequency.setValueAtTime(yuk ? 400 : 200, t);
+    s.go.frequency.exponentialRampToValueAtTime(yuk ? 100 : 80, t+0.08);
+    s.gg.gain.setValueAtTime(0.03, t);
+    s.gg.gain.exponentialRampToValueAtTime(0.001, t+0.1);
+  } catch(e) {}
+}
+
+// Kontroller
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  keys[k] = true;
+  if ([' ','arrowup','arrowdown','arrowleft','arrowright','shift','control','f','r'].includes(k) || e.key === ' ') e.preventDefault();
+});
+document.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+document.getElementById('uyari').addEventListener('click', () => {
+  canvas.requestPointerLock();
+  if (!sesCtx) sesBaslat();
+});
+
+document.addEventListener('pointerlockchange', () => {
+  fareKilitli = document.pointerLockElement === canvas;
+  if (fareKilitli) {
+    document.getElementById('uyari').style.display = 'none';
+  }
+});
+
+document.addEventListener('mousemove', e => {
+  if (!fareKilitli) return;
+  mouseX += e.movementX * 0.003;
+  mouseY += e.movementY * 0.002;
+  mouseY = Math.max(-0.5, Math.min(0.6, mouseY));
+});
+
+canvas.addEventListener('wheel', e => {
+  if (!fareKilitli) return;
+  e.preventDefault();
+}, {passive: false});
+
+// ============== VİTES ==============
+function vitesGuncel() {
+  if (keys['r'] && vitesIdx !== 0) {
+    vitesIdx = 0; vitAdi = 'R'; gearTimer = 0.4; vitesSesi(false); return;
+  }
+  if (vitesIdx === 0 && !keys['r']) { vitesIdx = 1; vitAdi = 'N'; gearTimer = 0.2; return; }
+
+  if (keys['shift'] && gearTimer <= 0 && vitesIdx >= 2 && vitesIdx < 8 && hiz > 3) {
+    vitesIdx++; vitAdi = ['N','N','1','2','3','4','5','6','7'][vitesIdx]; gearTimer = 0.4;
+    devir *= 0.65; vitesSesi(true); keys['shift'] = false; return;
+  }
+  if (keys['control'] && gearTimer <= 0 && vitesIdx > 2) {
+    vitesIdx--; vitAdi = ['N','N','1','2','3','4','5','6','7'][vitesIdx]; gearTimer = 0.35;
+    devir = Math.min(7000, devir * 1.35); vitesSesi(false); keys['control'] = false; return;
+  }
+  if (kmS < 1 && vitesIdx > 1 && !keys['shift'] && !keys['control'] && gearTimer < 0.01) {
+    vitesIdx = 1; vitAdi = 'N';
+  }
+}
+
+const ORAN = [0,0,0.082,0.145,0.225,0.33,0.47,0.65,0.88];
+
+// ============== 3D ÇİZİM ==============
+function ciz() {
+  const now = performance.now();
+  delta = Math.min((now - lastTime) / 1000, 0.05);
+  lastTime = now;
+  if (gearTimer > 0) gearTimer -= delta;
+
+  ctx.fillStyle = '#080818';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!fareKilitli) {
+    // Bekleme ekranı
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(0, 0, W, H);
+    cizHUD();
+    return;
+  }
+
+  // ===== FİZİK =====
+  const gaz = (keys['w'] || keys['arrowup']) ? 1 : 0;
+  const fren = (keys['s'] || keys['arrowdown']) ? 1 : 0;
+  const elF = keys[' '] ? 1 : 0;
+
+  vitesGuncel();
+
+  // Devir
+  if (vitesIdx === 1) devir += (700 + gaz*3500 - devir) * delta * 2.5;
+  else if (vitesIdx === 0) {
+    devir += (800 + gaz*3800 - devir) * delta * 3;
+    devir = Math.max(600, Math.min(6200, devir));
+  } else {
+    devir += (750 + (0.3+gaz*0.7)*6200 - devir) * delta * 3.5;
+    devir = Math.max(600, Math.min(7500, devir));
+    if (gearTimer > 0) devir *= 0.97;
+  }
+
+  // Hız
+  if (vitesIdx === 1) hiz *= 0.97;
+  else if (vitesIdx === 0) {
+    hiz += (-gaz*12 - hiz*0.5) * delta;
+    hiz = Math.max(-28, Math.min(0, hiz));
+  } else {
+    const v = Math.min(vitesIdx, 8);
+    const oran = ORAN[v] || 0.08;
+    const itme = gaz * oran * 135;
+    const mFren = (1-gaz) * hiz * 0.12;
+    const surt = hiz * 0.22;
+    const hava = hiz * hiz * 0.0012;
+    const fK = fren * 20;
+    const eF = elF * 40;
+    hiz += (itme - surt - hava - mFren - fK - eF) * delta;
+    hiz = Math.max(0, Math.min(330, hiz));
+  }
+  kmS = Math.round(hiz * 3.6);
+
+  // Direksiyon
+  const hF = Math.min(1, hiz / 30);
+  const dH = 0.12 + hF * 0.88;
+  if (keys['a'] || keys['arrowleft']) direk -= delta * 3.8 * dH;
+  else if (keys['d'] || keys['arrowright']) direk += delta * 3.8 * dH;
+  else direk *= 0.92;
+  direk = Math.max(-1, Math.min(1, direk));
+  rotY += direk * delta * 1.3 * hF;
+  yolZ += hiz * delta;
+
+  // Far
+  if (keys['f'] && !farTusB) { farAcik = !farAcik; farTusB = true; }
+  if (!keys['f']) farTusB = false;
+
+  // Ses
+  sesGuncel(devir, gaz);
+
+  // Trafik
+  trafik.forEach(t => {
+    t.z += 0.5 + t.hiz;
+    if (t.z > 20) t.z = -800 - Math.random() * 200;
+  });
+
+  // ===== 3D DÜNYA =====
+  const cx = W/2;
+  const cy = H * 0.35;
+  const fov = 700;
+
+  // Yol perspektifi
+  const kamX = Math.sin(rotY) * direk * 2;
+  const yat = direk * 0.3;
+
+  // Yol
+  const segments = 40;
+  for (let i = segments; i >= 0; i--) {
+    const z = (i * 15 - yolZ % 15) % 600 - 100;
+    if (z < -5) continue;
+
+    const scale = fov / (z + 5);
+    const yScale = fov / (z + 5);
+
+    const x1 = (-6 - kamX + yat * (1 - scale/fov)) * scale + cx;
+    const x2 = (6 - kamX + yat * (1 - scale/fov)) * scale + cx;
+    const y1 = cy + 2 * yScale;
+    const y2 = cy + 8 * yScale;
+
+    const dark = Math.max(0, Math.min(1, (z + 100) / 400));
+    const gri = Math.floor(35 + dark * 30);
+
+    // Yol zemini
+    ctx.fillStyle = `rgb(${gri},${gri+5},${gri+3})`;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y1);
+    ctx.lineTo(x2 + 3, y2);
+    ctx.lineTo(x1 - 3, y2);
+    ctx.fill();
+
+    // Yol çizgisi (kesik)
+    if (i % 2 === 0) {
+      const lw = 0.2 * scale;
+      ctx.fillStyle = `rgba(255,255,255,${0.3 + dark * 0.4})`;
+      ctx.fillRect(cx - lw/2, y1, lw, y2 - y1);
+    }
+
+    // Kenar çizgileri
+    const kc = Math.floor(150 + dark * 105);
+    ctx.strokeStyle = `rgb(${kc},${kc},${kc})`;
+    ctx.lineWidth = Math.max(1, 0.08 * scale);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1); ctx.lineTo(x1 - 0.5 * scale, y2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y1); ctx.lineTo(x2 + 0.5 * scale, y2); ctx.stroke();
+
+    // Kenar bariyerleri
+    if (i % 3 === 0) {
+      ctx.fillStyle = `rgba(100,100,100,${0.2 + dark * 0.3})`;
+      const bw = 0.3 * scale;
+      ctx.fillRect(x1 - 0.8*scale - bw/2, y1, bw, y2-y1);
+      ctx.fillRect(x2 + 0.8*scale - bw/2, y1, bw, y2-y1);
+    }
+  }
+
+  // Diğer arabalar
+  trafik.forEach(t => {
+    const rz = (-t.z - yolZ) % 600 - 100;
+    if (rz < -5 || rz > 50) return;
+    const s = fov / (rz + 5);
+    const tx = (t.x - kamX) * s + cx;
+    const ty = cy + 2.5 * s;
+    const tw = 2 * s;
+    const th = 0.8 * s;
+
+    if (tw < 2) return;
+
+    ctx.fillStyle = t.renk;
+    ctx.fillRect(tx - tw/2, ty, tw, th);
+
+    // Cam
+    ctx.fillStyle = 'rgba(68,136,204,0.35)';
+    ctx.fillRect(tx - tw*0.35, ty - th*0.15, tw*0.7, th*0.35);
+
+    // Farlar
+    ctx.fillStyle = '#ffffcc';
+    ctx.fillRect(tx - tw*0.25, ty - th*0.05, tw*0.12, th*0.08);
+    ctx.fillRect(tx + tw*0.13, ty - th*0.05, tw*0.12, th*0.08);
+
+    // Stoplar
+    ctx.fillStyle = '#ff0000';
+    ctx.fillRect(tx - tw*0.25, ty + th*0.6, tw*0.1, th*0.08);
+    ctx.fillRect(tx + tw*0.15, ty + th*0.6, tw*0.1, th*0.08);
+  });
+
+  // ===== İÇ MEKAN (ARABANIN İÇİ) =====
+  // Karartma çerçevesi (araba tavanı, sütunlar)
+  const icK = 0.92;
+
+  // A sütunları
+  ctx.fillStyle = '#0a0a0a';
+  const sutW = W * 0.04;
+  ctx.fillRect(0, cy - 20, sutW, H * 0.4);
+  ctx.fillRect(W - sutW, cy - 20, sutW, H * 0.4);
+
+  // Tavan
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(0, 0, W, cy * 0.7);
+
+  // Ön cam (hafif mavi)
+  ctx.fillStyle = 'rgba(100,180,255,0.06)';
+  ctx.fillRect(sutW + 5, cy * 0.65, W - 2*sutW - 10, cy * 0.3);
+
+  // Dashboard
+  ctx.fillStyle = '#111';
+  ctx.fillRect(sutW, cy + 5, W - 2*sutW, 25);
+
+  // Torpedo üst
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(sutW, cy - 5, W - 2*sutW, 12);
+
+  // Direksiyon (sol tarafta)
+  const dirCX = W * 0.28;
+  const dirCY = cy + 30;
+  const dirR = Math.min(W, H) * 0.06;
+
+  // Direksiyon halkası
+  ctx.save();
+  ctx.translate(dirCX, dirCY);
+  ctx.rotate(direk * 0.4);
+
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = Math.max(2, dirR * 0.15);
+  ctx.beginPath();
+  ctx.arc(0, 0, dirR - ctx.lineWidth/2, 0, Math.PI*2);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#222';
+  ctx.lineWidth = Math.max(1, dirR * 0.06);
+  ctx.beginPath();
+  ctx.arc(0, 0, dirR * 0.6, 0, Math.PI*2);
+  ctx.stroke();
+
+  // Göbek
+  ctx.fillStyle = '#222';
+  ctx.beginPath();
+  ctx.arc(0, 0, dirR * 0.25, 0, Math.PI*2);
+  ctx.fill();
+
+  // Amblem (üçgen)
+  ctx.fillStyle = '#888';
+  ctx.beginPath();
+  for (let i = 0; i < 3; i++) {
+    const a = (i * 2 * Math.PI / 3) - Math.PI/2;
+    i === 0 ? ctx.moveTo(Math.cos(a)*dirR*0.12, Math.sin(a)*dirR*0.12) : ctx.lineTo(Math.cos(a)*dirR*0.12, Math.sin(a)*dirR*0.12);
+  }
+  ctx.fill();
+  ctx.restore();
+
+  // Göstergeler
+  const gR = Math.min(W, H) * 0.035;
+  // Hız göstergesi
+  ctx.strokeStyle = 'rgba(0,255,136,0.4)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(W*0.35, cy+17, gR, 0, Math.PI*2);
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(0,255,136,0.15)';
+  ctx.beginPath();
+  ctx.arc(W*0.35, cy+17, gR-3, 0, Math.PI*2);
+  ctx.fill();
+
+  // Devir göstergesi
+  ctx.strokeStyle = 'rgba(255,136,0,0.4)';
+  ctx.beginPath();
+  ctx.arc(W*0.65, cy+17, gR, 0, Math.PI*2);
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255,136,0,0.15)';
+  ctx.beginPath();
+  ctx.arc(W*0.65, cy+17, gR-3, 0, Math.PI*2);
+  ctx.fill();
+
+  // COMAND ekranı
+  ctx.fillStyle = 'rgba(0,20,40,0.7)';
+  const ekW = W * 0.12;
+  const ekH = 10;
+  ctx.fillRect(W/2 - ekW/2, cy + 5, ekW, ekH);
+  ctx.fillStyle = 'rgba(0,60,120,0.15)';
+  ctx.fillRect(W/2 - ekW*0.4, cy + 7, ekW*0.8, ekH - 4);
+
+  // Orta konsol
+  ctx.fillStyle = '#111';
+  ctx.fillRect(W/2 - W*0.04, cy + 30, W*0.08, 15);
+
+  // Vites topuzu
+  ctx.fillStyle = '#222';
+  ctx.beginPath();
+  ctx.arc(W/2, cy + 38, 5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#f00';
+  ctx.beginPath();
+  ctx.moveTo(W/2, cy + 35);
+  ctx.lineTo(W/2 + 2, cy + 38);
+  ctx.lineTo(W/2 - 2, cy + 38);
+  ctx.fill();
+
+  // Koltuk (ön planda)
+  ctx.fillStyle = '#150805';
+  ctx.fillRect(0, cy + 40, W, H - cy - 40);
+
+  // Koltuk dikişleri
+  for (let s = -1; s <= 1; s += 2) {
+    ctx.fillStyle = '#1a0a05';
+    const kx = W/2 + s * W*0.15;
+    ctx.fillRect(kx - W*0.06, cy + 45, W*0.12, 60);
+    ctx.fillRect(kx - W*0.06, cy + 35, W*0.12, 15);
+
+    // Dikiş
+    ctx.fillStyle = 'rgba(80,60,40,0.3)';
+    ctx.fillRect(kx - W*0.04, cy + 48, W*0.08, 50);
+  }
+
+  // Kapı iç kaplamaları
+  ctx.fillStyle = '#121212';
+  ctx.fillRect(0, cy - 10, sutW + 10, H - cy + 10);
+  ctx.fillRect(W - sutW - 10, cy - 10, sutW + 10, H - cy + 10);
+
+  // Yan camlar (sol/sağ)
+  ctx.fillStyle = 'rgba(100,180,255,0.04)';
+  ctx.fillRect(sutW - 5, cy * 0.65, 10, cy * 0.3);
+  ctx.fillRect(W - sutW - 5, cy * 0.65, 10, cy * 0.3);
+
+  // ===== FAR IŞIĞI =====
+  if (farAcik) {
+    const grd = ctx.createRadialGradient(cx, cy + 100, 0, cx, cy + 100, W * 0.5);
+    grd.addColorStop(0, 'rgba(255,255,200,0.04)');
+    grd.addColorStop(0.3, 'rgba(255,255,200,0.02)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // ===== HUD =====
+  cizHUD();
+}
+
+function cizHUD() {
+  // HUD'ı CSS zaten yönetiyor, sadece değerleri güncelle
+  document.getElementById('devirS').textContent = Math.round(devir);
+  document.getElementById('devirD').style.width = `${Math.min(100, devir/7500*100)}%`;
+  document.getElementById('vitesH').textContent = vitAdi;
+  document.getElementById('hizKm').textContent = kmS;
+  document.getElementById('hizMph').textContent = Math.round(kmS * 0.621);
+  document.getElementById('dirG').style.transform = `rotate(${direk*35}deg)`;
+
+  // HUD metni
+  document.querySelector('.hiz').innerHTML = `${kmS}<small>KM/H</small>`;
+}
+
+// ===== LOOP =====
+function loop() {
+  ciz();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('load', () => {
+  lastTime = performance.now();
+  loop();
+});
+</script>
 </body>
 </html>
