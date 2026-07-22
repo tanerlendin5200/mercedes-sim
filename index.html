@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mercedes-Benz CL63 AMG — Sürüş Simülatörü</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#000;font-family:'Segoe UI',sans-serif;user-select:none;-webkit-user-select:none}
+canvas{display:block}
+#hud{position:fixed;bottom:0;left:0;right:0;height:230px;pointer-events:none;z-index:10;
+  background:linear-gradient(transparent,rgba(0,0,0,0.6) 30%,rgba(0,0,0,0.92))}
+#hizGosterge{position:absolute;bottom:70px;left:60px;color:#00ff88;font-size:80px;font-weight:700;
+  text-shadow:0 0 25px rgba(0,255,136,0.4),0 0 60px rgba(0,255,136,0.1);
+  font-family:'Courier New',monospace;letter-spacing:2px;line-height:1}
+#hizBirim{font-size:16px;color:#666;margin-left:8px;letter-spacing:3px}
+#devir{position:absolute;bottom:95px;left:60px;color:#ff8800;font-size:14px;font-weight:600;
+  text-shadow:0 0 8px rgba(255,136,0,0.2);font-family:'Courier New',monospace;letter-spacing:2px}
+#devirSayi{font-size:20px;color:#ffaa00}
+#devirBar{position:absolute;bottom:62px;left:60px;width:260px;height:5px;background:#1a1a1a;border-radius:3px;overflow:hidden;border:1px solid #222}
+#devirDolu{height:100%;width:0%;background:linear-gradient(90deg,#00ff88,#88ff00,#ffaa00,#ff4400,#ff0044);border-radius:2px;transition:width 0.04s}
+#devirKirmizi{position:absolute;right:0;top:0;bottom:0;width:15%;background:rgba(255,0,0,0.15);border-radius:0 2px 2px 0}
+#vites{position:absolute;bottom:120px;right:120px;text-align:center}
+#vitesHarfler{color:#fff;font-size:42px;font-weight:700;font-family:'Courier New',monospace;text-shadow:0 0 15px rgba(255,255,255,0.15);line-height:1}
+#vites span{display:block;font-size:12px;color:#666;letter-spacing:2px;margin-top:-4px}
+#hizBilgisi{position:absolute;bottom:72px;right:120px;text-align:right;font-family:'Courier New',monospace}
+#hizBilgisi div{font-size:13px;color:#555;margin:1px 0}
+#hizBilgisi .val{color:#aaa;font-size:16px}
+#direksiyonGosterge{position:absolute;bottom:40px;right:60px;width:90px;height:90px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,0.15);font-size:28px;z-index:15;pointer-events:none;transition:transform 0.08s}
+#uyari{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:26px;font-weight:700;
+  background:rgba(0,0,0,0.85);padding:35px 55px;border-radius:16px;border:1px solid rgba(0,255,136,0.3);
+  text-align:center;z-index:100;box-shadow:0 0 80px rgba(0,0,0,0.8);pointer-events:none;
+  backdrop-filter:blur(10px)}
+#uyari .logo{font-size:48px;margin-bottom:8px}
+#uyari small{display:block;font-size:13px;color:#666;margin-top:12px;font-weight:400;letter-spacing:1px}
+#bilgi{position:fixed;bottom:240px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,0.1);font-size:12px;z-index:10;font-family:'Courier New',monospace;
+  pointer-events:none;text-align:center;line-height:1.8;letter-spacing:1px;white-space:nowrap}
+#aynaSol{position:fixed;top:20px;left:20px;width:140px;height:80px;border:1px solid rgba(255,255,255,0.12);
+  border-radius:6px;overflow:hidden;z-index:20;pointer-events:none;background:#000;
+  box-shadow:0 0 15px rgba(0,0,0,0.6)}
+#aynaSag{position:fixed;top:20px;right:20px;width:140px;height:80px;border:1px solid rgba(255,255,255,0.12);
+  border-radius:6px;overflow:hidden;z-index:20;pointer-events:none;background:#000;
+  box-shadow:0 0 15px rgba(0,0,0,0.6)}
+#aynaOrta{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:110px;height:55px;
+  border:1px solid rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;z-index:20;
+  pointer-events:none;background:#000;opacity:0.5;box-shadow:0 0 10px rgba(0,0,0,0.5)}
+.aynaEtiket{position:absolute;bottom:2px;left:4px;color:rgba(255,255,255,0.15);font-size:8px;font-family:sans-serif;z-index:21;pointer-events:none}
+#geceEfekti{position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,20,0.3));z-index:5;pointer-events:none}
+#farIsigi{position:fixed;top:0;left:0;right:0;bottom:0;z-index:4;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse 80% 40% at 50% 70%,rgba(255,255,200,0.06),transparent 70%);
+  transition:opacity 0.3s}
+.sinyal{position:fixed;top:80px;width:30px;height:30px;border-radius:50%;z-index:22;pointer-events:none;
+  opacity:0;transition:opacity 0.1s}
+#sinyalSol{left:170px;background:radial-gradient(#00ff44 0%,transparent 70%);box-shadow:0 0 20px #00ff44}
+#sinyalSag{right:170px;background:radial-gradient(#00ff44 0%,transparent 70%);box-shadow:0 0 20px #00ff44}
+</style>
+</head>
+<body>
+
+<!-- AYNALAR -->
+<div id="aynaSol"><canvas id="aynaSolCanvas" width="140" height="80"></canvas><span class="aynaEtiket">SOL</span></div>
+<div id="aynaSag"><canvas id="aynaSagCanvas" width="140" height="80"></canvas><span class="aynaEtiket">SAĞ</span></div>
+<div id="aynaOrta"><canvas id="aynaOrtaCanvas" width="110" height="55"></canvas><span class="aynaEtiket">ORTA</span></div>
+
+<!-- SİNYAL IŞIKLARI -->
+<div id="sinyalSol" class="sinyal"></div>
+<div id="sinyalSag" class="sinyal"></div>
+
+<!-- FAR IŞIĞI -->
+<div id="farIsigi"></div>
+<div id="geceEfekti"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="hizGosterge">0<span id="hizBirim">KM/H</span></div>
+  <div id="devir">DEVİR <span id="devirSayi">0</span> rpm</div>
+  <div id="devirBar">
+    <div id="devirDolu"></div>
+    <div id="devirKirmizi"></div>
+  </div>
+  <div id="vites">
+    <div id="vitesHarfler">N</div>
+    <span>VİTES</span>
+  </div>
+  <div id="hizBilgisi">
+    <div><span class="val" id="hizKm">0</span> km/h</div>
+    <div><span class="val" id="hizMph">0</span> mph</div>
+  </div>
+  <div id="direksiyonGosterge">⟳</div>
+</div>
+
+<div id="bilgi">W GAZ &nbsp;|&nbsp; S FREN &nbsp;|&nbsp; A/D DİREKSİYON &nbsp;|&nbsp; SHIFT VİTES ↑ &nbsp;|&nbsp; CTRL VİTES ↓ &nbsp;|&nbsp; R GERİ &nbsp;|&nbsp; F FAR &nbsp;|&nbsp; Q/E SİNYAL &nbsp;|&nbsp; BOŞLUK EL FRENİ</div>
+<div id="uyari">
+  <div class="logo">🚗</div>
+  Mercedes-Benz CL63 AMG<br>
+  <small>Sürüşe başlamak için tıkla</small>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="mercedes.js"></script>
+</body>
+</html>
